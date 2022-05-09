@@ -9,11 +9,9 @@ void main() {
   runApp(const MyApp());
 }
 
-// #docregion MyApp
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // #docregion build
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,34 +26,27 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-  // #enddocregion build
 }
-// #enddocregion MyApp
 
-// #docregion RWS-var
 class _RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
   final _saved = <WordPair>{};
   final _biggerFont = const TextStyle(fontSize: 18);
-  // #enddocregion RWS-var
 
-  // #docregion RWS-build
   @override
   Widget build(BuildContext context) {
-    // #docregion itemBuilder
     return ListView.builder(
       padding: const EdgeInsets.all(16.0),
-      itemBuilder: /*1*/ (context, i) {
-        if (i.isOdd) return const Divider(); /*2*/
+      itemBuilder: (context, i) {
+        if (i.isOdd) return const Divider();
 
-        final index = i ~/ 2; /*3*/
+        final index = i ~/ 2;
         if (index >= _suggestions.length) {
-          _suggestions.addAll(generateWordPairs().take(10)); /*4*/
+          _suggestions.addAll(generateWordPairs().take(10));
         }
 
         final alreadySaved = _saved.contains(_suggestions[index]);
 
-        // #docregion listTile
         return ListTile(
           title: Text(
             _suggestions[index].asPascalCase,
@@ -66,16 +57,20 @@ class _RandomWordsState extends State<RandomWords> {
             color: alreadySaved ? Colors.red : null,
             semanticLabel: alreadySaved ? 'Remove from saved' : 'Save',
           ),
+          onTap: () {
+            setState(() {
+              if (alreadySaved) {
+                _saved.remove(_suggestions[index]);
+              } else {
+                _saved.add(_suggestions[index]);
+              }
+            });
+          },
         );
-        // #enddocregion listTile
       },
-      // #enddocregion itemBuilder
     );
   }
-  // #enddocregion RWS-build
-  // #docregion RWS-var
 }
-// #enddocregion RWS-var
 
 class RandomWords extends StatefulWidget {
   const RandomWords({Key? key}) : super(key: key);
